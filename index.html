@@ -3,97 +3,648 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CYC 的主页</title>
+<title>蔡羿承 · 个人主页 | 嵌入式 / 机器人开发</title>
+<meta name="description" content="蔡羿承 —— 大连海事大学自动化专业本科生，专注嵌入式开发与机器人运动控制：STM32、Linux 驱动、ROS、SLAM、四足/六足机器人。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230ea5e9'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3E蔡%3C/text%3E%3C/svg%3E">
 <style>
+  :root {
+    --bg: #0a0f1e;
+    --bg-soft: #0d1526;
+    --card: rgba(17, 26, 46, .72);
+    --card-hover: rgba(23, 34, 58, .85);
+    --border: rgba(148, 163, 184, .14);
+    --border-hover: rgba(56, 189, 248, .45);
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --dim: #64748b;
+    --accent: #38bdf8;
+    --accent-2: #818cf8;
+    --green: #34d399;
+    --amber: #fbbf24;
+    --mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Courier New", monospace;
+  }
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body {
-    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #164e63 100%);
-    color: #e2e8f0;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
+    font-family: "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
   }
+  ::selection { background: rgba(56, 189, 248, .35); }
+
+  /* ---------- 背景装饰：网格 + 光晕 ---------- */
+  .bg-deco { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+  .bg-deco::before {
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(148,163,184,.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148,163,184,.05) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 30%, transparent 75%);
+  }
+  .bg-deco::after {
+    content: ""; position: absolute; inset: 0;
+    background:
+      radial-gradient(600px 340px at 15% 8%, rgba(56,189,248,.13), transparent 65%),
+      radial-gradient(700px 420px at 88% 22%, rgba(129,140,248,.12), transparent 65%),
+      radial-gradient(520px 380px at 50% 100%, rgba(52,211,153,.06), transparent 70%);
+  }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- 导航 ---------- */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(10, 15, 30, .78);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); font-weight: 700; }
+  .logo-chip {
+    width: 32px; height: 32px; border-radius: 9px; flex: none;
+    background: linear-gradient(135deg, #0ea5e9, #6366f1);
+    display: grid; place-items: center; font-size: 15px; color: #fff;
+  }
+  .logo small { color: var(--dim); font-weight: 400; font-family: var(--mono); font-size: 11px; }
+  .nav-links { display: flex; gap: 4px; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none; font-size: 14px;
+    padding: 7px 13px; border-radius: 8px; transition: all .2s;
+  }
+  .nav-links a:hover { color: var(--text); background: rgba(148,163,184,.08); }
+  .nav-links a.active { color: var(--accent); background: rgba(56,189,248,.1); }
+  #menuBtn { display: none; background: none; border: 1px solid var(--border); color: var(--text); border-radius: 8px; width: 36px; height: 36px; cursor: pointer; font-size: 16px; }
+
+  /* ---------- 通用 ---------- */
+  section { padding: 92px 0 20px; }
+  .sec-label { font-family: var(--mono); color: var(--accent); font-size: 13px; letter-spacing: 1px; }
+  .sec-title { font-size: 30px; font-weight: 800; margin: 6px 0 10px; letter-spacing: 1px; }
+  .sec-desc { color: var(--muted); max-width: 640px; margin-bottom: 34px; font-size: 15px; }
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.on { opacity: 1; transform: none; }
+
   .card {
-    max-width: 720px;
-    width: 100%;
-    background: rgba(30, 41, 59, 0.75);
-    border: 1px solid rgba(148, 163, 184, 0.2);
-    border-radius: 20px;
-    padding: 48px 40px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 26px;
+    transition: transform .25s ease, border-color .25s ease, background .25s ease;
   }
-  .avatar {
-    width: 72px; height: 72px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #38bdf8, #818cf8);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 28px; font-weight: 700; color: #fff;
-    margin-bottom: 20px;
-  }
-  h1 { font-size: 30px; margin-bottom: 8px; color: #f8fafc; }
-  .subtitle { color: #94a3b8; font-size: 15px; margin-bottom: 28px; }
-  .intro { line-height: 1.9; font-size: 15px; color: #cbd5e1; margin-bottom: 32px; }
-  h2 {
-    font-size: 14px; letter-spacing: 2px; text-transform: uppercase;
-    color: #38bdf8; margin-bottom: 14px;
-  }
-  .tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 32px; }
+  .card:hover { transform: translateY(-4px); border-color: var(--border-hover); background: var(--card-hover); }
+
   .tag {
-    background: rgba(56, 189, 248, 0.12);
-    border: 1px solid rgba(56, 189, 248, 0.35);
-    color: #7dd3fc;
-    padding: 6px 14px;
-    border-radius: 999px;
-    font-size: 13px;
+    display: inline-block; padding: 4px 12px; border-radius: 999px;
+    font-size: 12.5px; font-family: var(--mono);
+    background: rgba(56,189,248,.09); border: 1px solid rgba(56,189,248,.28); color: #7dd3fc;
   }
-  .links { display: flex; flex-wrap: wrap; gap: 12px; }
+  .tag.v { background: rgba(129,140,248,.1); border-color: rgba(129,140,248,.32); color: #a5b4fc; }
+  .tag.g { background: rgba(52,211,153,.09); border-color: rgba(52,211,153,.3); color: #6ee7b7; }
+
+  /* ---------- Hero ---------- */
+  #hero { padding-top: 130px; padding-bottom: 40px; }
+  .hero-grid { display: flex; align-items: center; gap: 48px; }
+  .avatar-box { position: relative; flex: none; }
+  .avatar-box img {
+    width: 168px; height: 168px; border-radius: 28px; object-fit: cover; display: block;
+    border: 2px solid rgba(56,189,248,.5);
+    box-shadow: 0 0 0 6px rgba(56,189,248,.08), 0 18px 50px rgba(2,8,20,.6);
+  }
+  .avatar-dot {
+    position: absolute; right: -6px; bottom: -6px;
+    background: rgba(10,25,20,.9); border: 1px solid rgba(52,211,153,.5);
+    color: var(--green); border-radius: 999px; padding: 4px 12px; font-size: 12px; font-family: var(--mono);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .avatar-dot i { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: blink 1.6s infinite; }
+  @keyframes blink { 50% { opacity: .25; } }
+  .hero-kicker { font-family: var(--mono); color: var(--accent); font-size: 14px; margin-bottom: 10px; }
+  h1.hero-name { font-size: clamp(38px, 6vw, 54px); font-weight: 900; letter-spacing: 2px; line-height: 1.15; }
+  h1.hero-name .en {
+    display: block; font-size: .38em; font-weight: 600; letter-spacing: 6px;
+    color: var(--dim); font-family: var(--mono); margin-top: 6px; text-transform: uppercase;
+  }
+  .typed-line { font-size: 19px; margin: 16px 0 12px; color: var(--text); font-weight: 600; }
+  .typed-line #typed { color: var(--accent); }
+  .typed-line .cursor { display: inline-block; width: 2px; height: 1.1em; background: var(--accent); vertical-align: -2px; margin-left: 3px; animation: blink 1s infinite; }
+  .hero-bio { color: var(--muted); max-width: 560px; font-size: 15px; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 20px 0 26px; color: var(--muted); font-size: 14px; }
+  .hero-meta span { display: inline-flex; align-items: center; gap: 7px; }
+  .hero-meta b { color: var(--text); font-weight: 600; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; }
   .btn {
-    display: inline-block;
-    padding: 10px 22px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-size: 14px;
-    transition: all .2s ease;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 24px; border-radius: 11px; font-size: 14.5px; font-weight: 600;
+    text-decoration: none; transition: all .2s; border: 1px solid transparent;
   }
-  .btn-primary { background: #0ea5e9; color: #fff; }
-  .btn-primary:hover { background: #0284c7; transform: translateY(-2px); }
-  .btn-ghost { border: 1px solid rgba(148,163,184,.4); color: #cbd5e1; }
-  .btn-ghost:hover { border-color: #38bdf8; color: #7dd3fc; transform: translateY(-2px); }
-  footer { margin-top: 40px; color: #64748b; font-size: 12px; text-align: center; }
+  .btn-primary { background: linear-gradient(135deg, #0ea5e9, #4f46e5); color: #fff; box-shadow: 0 8px 24px rgba(14,165,233,.28); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(14,165,233,.4); }
+  .btn-ghost { border-color: rgba(148,163,184,.35); color: var(--text); }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 52px; }
+  .stat { text-align: center; padding: 18px 8px; }
+  .stat b { display: block; font-size: 26px; font-weight: 800; background: linear-gradient(120deg, #7dd3fc, #a5b4fc); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .stat span { font-size: 13px; color: var(--muted); }
+
+  /* ---------- 关于 ---------- */
+  .about-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 18px; }
+  .about-text p { color: #cbd5e1; font-size: 15px; margin-bottom: 14px; }
+  .about-text p:last-child { margin-bottom: 0; }
+  .about-text em { color: var(--accent); font-style: normal; font-weight: 600; }
+  .edu-card h3 { font-size: 17px; margin-bottom: 4px; }
+  .edu-card .school-line { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font-size: 13.5px; margin-bottom: 12px; }
+  .edu-card .rank { color: var(--green); font-weight: 700; }
+  .edu-courses { font-size: 13.5px; color: var(--muted); line-height: 1.9; }
+  .edu-courses b { color: var(--text); font-weight: 600; }
+
+  /* ---------- 技能 ---------- */
+  .skills-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .skill-card .icon { font-size: 22px; }
+  .skill-card h3 { font-size: 16px; margin: 10px 0 4px; }
+  .skill-card p { font-size: 13px; color: var(--dim); margin-bottom: 14px; }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  /* ---------- 项目 ---------- */
+  .proj-list { display: flex; flex-direction: column; gap: 18px; }
+  .proj { position: relative; overflow: hidden; }
+  .proj::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: linear-gradient(180deg, var(--accent), var(--accent-2));
+    opacity: .85;
+  }
+  .proj-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .proj-head h3 { font-size: 19px; font-weight: 800; }
+  .proj-head h3 .hl { color: var(--accent); }
+  .proj-date { font-family: var(--mono); color: var(--dim); font-size: 12.5px; }
+  .proj-role { display: inline-block; font-size: 12px; color: var(--amber); border: 1px solid rgba(251,191,36,.35); background: rgba(251,191,36,.08); border-radius: 6px; padding: 1px 9px; margin-left: 10px; font-weight: 600; }
+  .proj-brief { color: var(--muted); font-size: 14px; margin: 8px 0 12px; }
+  .proj ul { list-style: none; display: grid; gap: 8px; margin-bottom: 16px; }
+  .proj li { position: relative; padding-left: 20px; color: #cbd5e1; font-size: 14px; }
+  .proj li::before { content: "▸"; position: absolute; left: 2px; color: var(--accent); font-size: 12px; top: 2px; }
+  .proj li b { color: var(--text); }
+  .proj-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  /* ---------- 荣誉时间线 ---------- */
+  .timeline { position: relative; margin-left: 6px; }
+  .timeline::before { content: ""; position: absolute; left: 8px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(180deg, rgba(56,189,248,.6), rgba(129,140,248,.25), transparent); }
+  .tl-item { position: relative; padding: 0 0 26px 40px; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-item::before {
+    content: ""; position: absolute; left: 2px; top: 7px; width: 14px; height: 14px; border-radius: 50%;
+    background: var(--bg); border: 3px solid var(--accent); box-shadow: 0 0 12px rgba(56,189,248,.55);
+  }
+  .tl-item.gold::before { border-color: var(--amber); box-shadow: 0 0 12px rgba(251,191,36,.55); }
+  .tl-year { font-family: var(--mono); color: var(--accent); font-size: 12.5px; letter-spacing: 1px; }
+  .tl-item.gold .tl-year { color: var(--amber); }
+  .tl-item h4 { font-size: 16px; margin: 3px 0 2px; }
+  .tl-item h4 .medal { margin-right: 6px; }
+  .tl-item p { color: var(--muted); font-size: 13.5px; }
+
+  /* ---------- 经历 ---------- */
+  .exp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .exp-card .exp-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 6px; }
+  .exp-card h3 { font-size: 16.5px; }
+  .exp-card .exp-date { font-family: var(--mono); color: var(--dim); font-size: 12px; }
+  .exp-card .exp-role { color: var(--accent); font-size: 13px; font-weight: 600; margin: 2px 0 10px; }
+  .exp-card ul { list-style: none; display: grid; gap: 7px; }
+  .exp-card li { position: relative; padding-left: 18px; color: var(--muted); font-size: 13.5px; }
+  .exp-card li::before { content: "·"; position: absolute; left: 4px; color: var(--accent); font-weight: 900; }
+
+  /* ---------- 联系 / 页脚 ---------- */
+  #contact .contact-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 8px; }
+  .ccard { display: flex; align-items: center; gap: 15px; text-decoration: none; color: var(--text); }
+  .ccard .ci {
+    width: 46px; height: 46px; border-radius: 13px; flex: none;
+    display: grid; place-items: center; font-size: 20px;
+    background: rgba(56,189,248,.1); border: 1px solid rgba(56,189,248,.3);
+  }
+  .ccard .ct { font-size: 12.5px; color: var(--dim); }
+  .ccard .cv { font-size: 14.5px; font-weight: 600; word-break: break-all; }
+  .ccard:hover .cv { color: var(--accent); }
+  footer { border-top: 1px solid var(--border); margin-top: 90px; padding: 30px 0 36px; }
+  .foot-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; color: var(--dim); font-size: 13px; }
+  .foot-inner .mono { font-family: var(--mono); font-size: 12px; }
+
+  /* ---------- 响应式 ---------- */
+  @media (max-width: 860px) {
+    .skills-grid { grid-template-columns: repeat(2, 1fr); }
+    .about-grid, .exp-grid { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    #contact .contact-cards { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 680px) {
+    .nav-links {
+      position: absolute; top: 60px; right: 16px; flex-direction: column;
+      background: rgba(13,21,38,.97); border: 1px solid var(--border); border-radius: 14px;
+      padding: 10px; width: 160px; display: none; box-shadow: 0 16px 40px rgba(0,0,0,.5);
+    }
+    .nav-links.open { display: flex; }
+    #menuBtn { display: block; }
+    .hero-grid { flex-direction: column; align-items: flex-start; gap: 28px; }
+    .skills-grid { grid-template-columns: 1fr; }
+    section { padding-top: 72px; }
+    #hero { padding-top: 104px; }
+  }
 </style>
 </head>
 <body>
-  <main class="card">
-    <div class="avatar">CYC</div>
-    <h1>你好，我是 CYC</h1>
-    <p class="subtitle">学生 · 机器人 / 嵌入式 / AI 爱好者</p>
-    <p class="intro">
-      欢迎来到我的个人主页。这里会记录我的项目、学习笔记和一些折腾的东西。
-      目前在玩无人机视觉、激光雷达与飞控，也写写 STM32 和部署各种 AI 工具。
-    </p>
 
-    <h2>方向</h2>
-    <div class="tags">
-      <span class="tag">无人机 / PX4</span>
-      <span class="tag">激光雷达</span>
-      <span class="tag">计算机视觉</span>
-      <span class="tag">STM32</span>
-      <span class="tag">AI 应用</span>
-      <span class="tag">FPGA</span>
+<div class="bg-deco"></div>
+
+<!-- ================= 导航 ================= -->
+<nav>
+  <div class="wrap nav-inner">
+    <a class="logo" href="#hero">
+      <span class="logo-chip">蔡</span>
+      蔡羿承 <small>&lt;embedded / robotics&gt;</small>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="#about">关于</a>
+      <a href="#skills">技能</a>
+      <a href="#projects">项目</a>
+      <a href="#honors">荣誉</a>
+      <a href="#exp">经历</a>
+      <a href="#contact">联系</a>
+    </div>
+    <button id="menuBtn" aria-label="菜单">☰</button>
+  </div>
+</nav>
+
+<!-- ================= 首屏 ================= -->
+<section id="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="avatar-box reveal">
+        <img src="avatar.jpg" alt="蔡羿承证件照">
+        <span class="avatar-dot"><i></i>求职中 · 实习</span>
+      </div>
+      <div class="reveal">
+        <div class="hero-kicker">$ whoami —— 嵌入式 · 机器人 · 19 岁</div>
+        <h1 class="hero-name">你好，我是蔡羿承<span class="en">Cai Yicheng · CYC</span></h1>
+        <p class="typed-line">&gt; <span id="typed"></span><span class="cursor"></span></p>
+        <p class="hero-bio">
+          大连海事大学自动化专业在读（211 · 专业前 10%）。从 STM32 裸机到 ROS 无人系统，
+          主导过六足机器人、无人船感知、无人车 SLAM 等多个项目——喜欢把算法装进真实的机器里，让它们跑起来。
+        </p>
+        <div class="hero-meta">
+          <span>📍 <b>南京</b></span>
+          <span>🎓 <b>大连海事大学 · 自动化 · 本科</b></span>
+          <span>🏆 <b>iCAN AI 挑战赛全国一等奖</b></span>
+        </div>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#projects">查看项目 →</a>
+          <a class="btn btn-ghost" href="https://github.com/zmjjcjb" target="_blank" rel="noopener">GitHub</a>
+          <a class="btn btn-ghost" href="mailto:2429708574@qq.com">联系我</a>
+        </div>
+      </div>
     </div>
 
-    <h2>链接</h2>
-    <div class="links">
-      <a class="btn btn-primary" href="https://github.com/zmjjcjb" target="_blank" rel="noopener">GitHub</a>
-      <a class="btn btn-ghost" href="#" >博客（待建）</a>
-      <a class="btn btn-ghost" href="mailto:you@example.com">联系我</a>
+    <div class="stats reveal">
+      <div class="card stat"><b>前 10%</b><span>专业排名</span></div>
+      <div class="card stat"><b>5+</b><span>主导项目</span></div>
+      <div class="card stat"><b>6</b><span>竞赛奖项</span></div>
+      <div class="card stat"><b>1 篇</b><span>论文在投</span></div>
     </div>
+  </div>
+</section>
 
-    <footer>© 2026 CYC · Powered by GitHub Pages</footer>
-  </main>
+<!-- ================= 关于 ================= -->
+<section id="about">
+  <div class="wrap">
+    <div class="sec-label reveal">// 01 · ABOUT</div>
+    <h2 class="sec-title reveal">关于我</h2>
+    <div class="about-grid">
+      <div class="card about-text reveal">
+        <p>
+          我是蔡羿承，大连海事大学<em>自动化专业</em>本科生（2024 级）。具备扎实的嵌入式开发与硬件设计基础：
+          精通 <em>C 语言与 STM32 开发</em>，熟悉 Linux 驱动框架（设备树、U-Boot、字符设备驱动），
+          深入理解 UART / I2C / SPI / USB 等底层通信协议。
+        </p>
+        <p>
+          熟练掌握 <em>Ubuntu + ROS</em> 开发环境，有激光雷达 SLAM 建图、A* 路径规划、多传感器融合的完整实战经验，
+          掌握 PCL 点云处理与 MID360 等雷达的数据采集；同时具备深度学习应用能力，
+          使用 <em>PyTorch</em> 完成目标检测与语义分割，支撑学术论文在投。
+        </p>
+        <p>
+          对<em>四足 / 多足机器人运动控制</em>方向有浓厚兴趣，动手能力强，善于软硬件协同调试与问题排查——
+          从画 PCB、焊板子，到写驱动、调算法，全流程都能自己搞定。
+        </p>
+      </div>
+      <div class="card edu-card reveal">
+        <div class="icon" style="font-size:22px">🎓</div>
+        <h3>大连海事大学 <span style="color:var(--dim);font-size:13px;font-weight:400">(211)</span></h3>
+        <div class="school-line"><span>自动化 · 本科</span><span>2024.09 – 2028.06</span></div>
+        <p class="rank">专业排名 前 10%</p>
+        <div class="edu-courses" style="margin-top:10px">
+          <b>主修课程：</b>C 语言、电路原理、单片机原理及应用实验、数字电子技术、模拟电子技术基础、信号分析与处理、自动控制原理
+        </div>
+        <div class="edu-courses" style="margin-top:10px">
+          <b>证书：</b>大学英语四级（CET-4，2024）
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 技能 ================= -->
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-label reveal">// 02 · SKILLS</div>
+    <h2 class="sec-title reveal">技术栈</h2>
+    <p class="sec-desc reveal">软硬件兼备：上得了 ROS 节点，画得了 PCB，调得了 PID。</p>
+    <div class="skills-grid">
+      <div class="card skill-card reveal">
+        <div class="icon">⌨️</div>
+        <h3>编程语言</h3>
+        <p>精通 C，熟练 C++ / Python，了解 Verilog</p>
+        <div class="skill-tags">
+          <span class="tag">C</span><span class="tag">C++</span><span class="tag">Python</span><span class="tag v">Verilog</span><span class="tag v">MATLAB/Simulink</span>
+        </div>
+      </div>
+      <div class="card skill-card reveal">
+        <div class="icon">🔧</div>
+        <h3>嵌入式开发</h3>
+        <p>精通 STM32，熟悉 Linux 驱动与实时调度</p>
+        <div class="skill-tags">
+          <span class="tag">STM32</span><span class="tag">Raspberry Pi5</span><span class="tag">Linux 驱动</span><span class="tag">设备树</span><span class="tag">U-Boot</span><span class="tag">FreeRTOS</span><span class="tag">中断/PWM</span>
+        </div>
+      </div>
+      <div class="card skill-card reveal">
+        <div class="icon">📡</div>
+        <h3>通信协议</h3>
+        <p>深入理解底层总线，具备多协议外设驱动开发经验</p>
+        <div class="skill-tags">
+          <span class="tag">UART</span><span class="tag">I2C</span><span class="tag">SPI</span><span class="tag">USB</span><span class="tag g">Socket</span>
+        </div>
+      </div>
+      <div class="card skill-card reveal">
+        <div class="icon">🤖</div>
+        <h3>机器人 & AI</h3>
+        <p>ROS 全流程开发，SLAM 与深度学习应用</p>
+        <div class="skill-tags">
+          <span class="tag">ROS Noetic</span><span class="tag">Gazebo</span><span class="tag">SLAM</span><span class="tag">PCL</span><span class="tag">OpenCV</span><span class="tag">PyTorch</span><span class="tag v">PX4</span>
+        </div>
+      </div>
+      <div class="card skill-card reveal">
+        <div class="icon">🎛️</div>
+        <h3>控制算法</h3>
+        <p>精通 PID 与自动控制原理，路径规划实战</p>
+        <div class="skill-tags">
+          <span class="tag">PID</span><span class="tag">A* 规划</span><span class="tag">轨迹跟踪</span><span class="tag">步态规划</span><span class="tag">多舵机协同</span>
+        </div>
+      </div>
+      <div class="card skill-card reveal">
+        <div class="icon">🔌</div>
+        <h3>硬件设计</h3>
+        <p>独立完成原理图 / PCB 设计与电路调试</p>
+        <div class="skill-tags">
+          <span class="tag">Altium Designer</span><span class="tag">原理图</span><span class="tag">PCB</span><span class="tag">芯片手册</span><span class="tag">电路调试</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 项目 ================= -->
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-label reveal">// 03 · PROJECTS</div>
+    <h2 class="sec-title reveal">项目经历</h2>
+    <p class="sec-desc reveal">全部为负责人 / 主要负责人身份主导，覆盖机器人本体、无人系统感知与导航。</p>
+    <div class="proj-list">
+
+      <div class="card proj reveal">
+        <div class="proj-head">
+          <h3>🦾 六足仿生机器人控制系统 <span class="proj-role">负责人</span></h3>
+          <span class="proj-date">2025.11 – 2026.03</span>
+        </div>
+        <p class="proj-brief">基于 Raspberry Pi5 + STM32F103 主从架构的六足机器人，支持键盘实时控制与图像回传，具备扩展为仿生四足机器人的能力。</p>
+        <ul>
+          <li>树莓派作为上位机通过 <b>UART 协议</b>下发指令，STM32 作为下位机统一调度 <b>18 路舵机</b>，完成多轴关节同步运动控制</li>
+          <li>采用<b>定时器中断触发多通道 PWM</b> 输出，解决多舵机同步控制延迟问题，确保各腿动作协调一致</li>
+          <li>基于正弦运动模型编写<b>脚部轨迹规划算法</b>，实现前进、后退、转向等基本步态</li>
+          <li>集成 USB 摄像头 + <b>OpenCV</b> 采集图像，基于 <b>Socket</b> 实时回传视频流，端到端延迟 <b>&lt; 200ms</b></li>
+          <li>独立完成硬件电路设计，使用 Altium Designer 绘制原理图与 PCB</li>
+        </ul>
+        <div class="proj-tags">
+          <span class="tag">Raspberry Pi5</span><span class="tag">STM32F103</span><span class="tag">UART</span><span class="tag">PWM</span><span class="tag">OpenCV</span><span class="tag">Socket</span><span class="tag v">Altium Designer</span>
+        </div>
+      </div>
+
+      <div class="card proj reveal">
+        <div class="proj-head">
+          <h3>🚤 无人船多模态融合感知系统 <span style="font-size:13px;color:var(--green);font-weight:600">（论文在投）</span><span class="proj-role">负责人</span></h3>
+          <span class="proj-date">2025.04 – 至今</span>
+        </div>
+        <p class="proj-brief">基于 Ubuntu + ROS 的无人船多模态感知系统，实现深度图像与激光雷达点云融合，支撑学术论文在投与 iCAN 大赛全国总决赛。</p>
+        <ul>
+          <li>使用 <b>MID360 激光雷达</b>进行点云数据采集与处理，实现高精度环境建图</li>
+          <li>开发深度图像与雷达点云<b>融合算法</b>，障碍物检测准确率提升至 <b>95% 以上</b></li>
+          <li>实现点云预处理（滤波、降采样、配准），处理效率达 <b>30 FPS</b></li>
+          <li>基于 ROS 搭建多传感器通信架构，实现激光雷达、深度相机、IMU 数据同步</li>
+          <li>应用<b>深度学习模型</b>（PyTorch）进行目标检测与语义分割，支持水域障碍物识别</li>
+        </ul>
+        <div class="proj-tags">
+          <span class="tag">ROS</span><span class="tag">MID360 激光雷达</span><span class="tag">PCL</span><span class="tag">OpenCV</span><span class="tag">PyTorch</span><span class="tag v">C++/Python</span>
+        </div>
+      </div>
+
+      <div class="card proj reveal">
+        <div class="proj-head">
+          <h3>🌊 USV 水面无人船路径规划仿真 <span class="proj-role">负责人</span></h3>
+          <span class="proj-date">2025.04 – 2025.10</span>
+        </div>
+        <p class="proj-brief">基于 Ubuntu 22.04 + ROS Noetic + Gazebo 搭建无人船仿真平台，完成路径规划算法开发与仿真验证。</p>
+        <ul>
+          <li>配置 <b>ROS 节点通信架构</b>，集成激光雷达 / IMU 多传感器数据融合</li>
+          <li>实现 <b>A* 路径搜索 + PID 轨迹跟踪</b>算法，优化障碍物动态规避策略</li>
+          <li>路径平滑度提升 <b>20%</b>，规避响应时间缩短至 <b>0.8s</b></li>
+          <li>使用 C++（Catkin 工作空间）与 Python 完成算法开发与仿真验证</li>
+        </ul>
+        <div class="proj-tags">
+          <span class="tag">Ubuntu 22.04</span><span class="tag">ROS Noetic</span><span class="tag">Gazebo</span><span class="tag">A*</span><span class="tag">PID</span><span class="tag v">Catkin</span>
+        </div>
+      </div>
+
+      <div class="card proj reveal">
+        <div class="proj-head">
+          <h3>🚗 基于 ROS 的无人车 SLAM 导航系统 <span class="proj-role">负责人</span></h3>
+          <span class="proj-date">2024.10 – 2025.02</span>
+        </div>
+        <p class="proj-brief">基于 Ubuntu + ROS 的无人车自主导航系统，实现激光雷达 SLAM 建图与 A* 路径规划，应用于室内场景自主移动。</p>
+        <ul>
+          <li>搭建 ROS 通信架构，实现传感器驱动、SLAM、路径规划、运动控制<b>多节点协同</b></li>
+          <li>激光雷达 SLAM 建图生成高精度环境地图，定位误差控制在 <b>5cm 以内</b></li>
+          <li>A* 算法路径规划支持动态障碍物规避，规划响应时间 <b>≤ 0.3 秒</b></li>
+          <li>开发基于 PID 的轨迹跟踪控制器，路径跟踪误差 <b>≤ 10cm</b></li>
+          <li>集成<b>多传感器融合</b>（激光雷达 + 轮速里程计 + IMU），提升定位鲁棒性</li>
+        </ul>
+        <div class="proj-tags">
+          <span class="tag">ROS Noetic</span><span class="tag">Gmapping/Cartographer</span><span class="tag">A*</span><span class="tag">PID 控制</span><span class="tag v">C++/Python</span>
+        </div>
+      </div>
+
+      <div class="card proj reveal">
+        <div class="proj-head">
+          <h3>🛞 智能小车系统设计与实现 <span class="proj-role">主要负责人</span></h3>
+          <span class="proj-date">2024.10 – 2025.02</span>
+        </div>
+        <p class="proj-brief">基于 STM32F103C8T6 的智能小车，实现蓝牙遥控、红外循迹与超声波避障，获校级智能车设计大赛一等奖。</p>
+        <ul>
+          <li>独立完成<b>硬件电路设计</b>：HC-SR04 超声波、TCRT5000 红外循迹、HC-05 蓝牙模块选型与电路连接，AD 完成 PCB 绘制</li>
+          <li>通过 <b>PID 调节</b>优化转向精度，避障响应时间 <b>≤ 0.5s</b></li>
+          <li>设计传感器信号处理电路，完成信号采集与运动控制逻辑开发</li>
+          <li>C 语言编写控制程序，实现直行、转弯及路径纠正；团队协作完成蓝牙通信调试，实现手机 APP 远程控制</li>
+        </ul>
+        <div class="proj-tags">
+          <span class="tag">STM32F103C8T6</span><span class="tag">PID</span><span class="tag">HC-05 蓝牙</span><span class="tag">超声波/红外</span><span class="tag v">AD · PCB</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= 荣誉 ================= -->
+<section id="honors">
+  <div class="wrap">
+    <div class="sec-label reveal">// 04 · HONORS</div>
+    <h2 class="sec-title reveal">荣誉奖项</h2>
+    <div class="timeline">
+      <div class="tl-item gold reveal">
+        <div class="tl-year">2026 · 国家级</div>
+        <h4><span class="medal">🥇</span>"智能化船舶尾流场分析专家系统" 全国决赛一等奖</h4>
+        <p>全国大学生创新创业大赛组委会 · 聚焦智能船舶尾流分析，通过算法优化实现高效建模与预测</p>
+      </div>
+      <div class="tl-item gold reveal">
+        <div class="tl-year">2025 · 国家级</div>
+        <h4><span class="medal">🥇</span>iCAN 大学生创新创业大赛 AI 挑战赛 全国总决赛一等奖</h4>
+        <p>教育部主办 · 项目"深瞳智能：基于分割模型的多智能协同水域监测系统"，负责多模态感知模块开发</p>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-year">2025 · 省级</div>
+        <h4><span class="medal">🥈</span>全国大学生电子设计竞赛 辽宁赛区二等奖</h4>
+        <p>辽宁省教育厅 · 基于单片机的智能控制系统设计，嵌入式系统与信号处理方向</p>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-year">2024 · 校级</div>
+        <h4><span class="medal">🏆</span>校级智能车设计大赛一等奖</h4>
+        <p>大连海事大学 · 作为主要负责人完成智能小车系统设计并实现稳定循迹</p>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-year">2024 · 校级</div>
+        <h4><span class="medal">🏆</span>华航杯单片机设计大赛一等奖</h4>
+        <p>大连海事大学 · 单片机底层编程与硬件集成方向</p>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-year">2024 · 校级</div>
+        <h4><span class="medal">🎖️</span>校级优秀学生干部</h4>
+        <p>大连海事大学 · 班级管理与社团组织表现突出</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 经历 ================= -->
+<section id="exp">
+  <div class="wrap">
+    <div class="sec-label reveal">// 05 · EXPERIENCE</div>
+    <h2 class="sec-title reveal">组织经历</h2>
+    <div class="exp-grid">
+      <div class="card exp-card reveal">
+        <div class="exp-head"><h3>🔬 学院科技学社 · 部长</h3><span class="exp-date">2025.06 – 至今</span></div>
+        <div class="exp-role">大连海事大学</div>
+        <ul>
+          <li>主持每周技术分享会，确定嵌入式开发等前沿实用主题</li>
+          <li>组织成员开展项目实践，推动技术交流与创新</li>
+          <li>培养新成员技术能力，建立技术传承机制，提升社团整体技术水平</li>
+        </ul>
+      </div>
+      <div class="card exp-card reveal">
+        <div class="exp-head"><h3>🧭 班级班长</h3><span class="exp-date">2024.09 – 至今</span></div>
+        <div class="exp-role">大连海事大学</div>
+        <ul>
+          <li>协助辅导员管理班级日常事务，组织班会与集体活动</li>
+          <li>沟通师生关系，及时反馈同学意见与需求</li>
+          <li>获评校级优秀学生干部，体现领导力与责任感</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 联系 ================= -->
+<section id="contact">
+  <div class="wrap">
+    <div class="sec-label reveal">// 06 · CONTACT</div>
+    <h2 class="sec-title reveal">联系我</h2>
+    <p class="sec-desc reveal">正在寻找嵌入式 / 机器人方向的实习机会，欢迎交流合作。</p>
+    <div class="contact-cards">
+      <a class="card ccard reveal" href="mailto:2429708574@qq.com">
+        <span class="ci">✉️</span>
+        <span><span class="ct">Email</span><br><span class="cv">2429708574@qq.com</span></span>
+      </a>
+      <a class="card ccard reveal" href="tel:13675196286">
+        <span class="ci">📱</span>
+        <span><span class="ct">Phone</span><br><span class="cv">136-7519-6286</span></span>
+      </a>
+      <a class="card ccard reveal" href="https://github.com/zmjjcjb" target="_blank" rel="noopener">
+        <span class="ci">💻</span>
+        <span><span class="ct">GitHub</span><br><span class="cv">github.com/zmjjcjb</span></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-inner">
+    <span>© 2026 蔡羿承 · Powered by GitHub Pages</span>
+    <span class="mono">while(alive) { learn(); build(); }</span>
+  </div>
+</footer>
+
+<script>
+  // 打字机效果：轮播身份/方向
+  const phrases = [
+    "嵌入式开发实习生（四足机器人方向）",
+    "STM32 / Linux 驱动 / ROS 开发",
+    "SLAM · 路径规划 · 多传感器融合",
+    "把算法装进真实的机器里 🤖"
+  ];
+  const typedEl = document.getElementById("typed");
+  let pi = 0, ci = 0, deleting = false;
+  function typeLoop() {
+    const cur = phrases[pi];
+    typedEl.textContent = cur.slice(0, ci);
+    let delay = deleting ? 38 : 92;
+    if (!deleting && ci === cur.length) { delay = 2200; deleting = true; }
+    else if (deleting && ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; delay = 420; }
+    else ci += deleting ? -1 : 1;
+    setTimeout(typeLoop, delay);
+  }
+  typeLoop();
+
+  // 滚动渐入动画
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("on"); io.unobserve(e.target); } });
+  }, { threshold: .12 });
+  document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+  // 导航高亮 + 移动端菜单
+  const links = document.querySelectorAll(".nav-links a");
+  const secs = [...links].map(a => document.querySelector(a.getAttribute("href")));
+  window.addEventListener("scroll", () => {
+    const y = window.scrollY + 90;
+    let idx = 0;
+    secs.forEach((s, i) => { if (s && s.offsetTop <= y) idx = i; });
+    links.forEach((a, i) => a.classList.toggle("active", i === idx));
+  }, { passive: true });
+
+  const navLinks = document.getElementById("navLinks");
+  document.getElementById("menuBtn").addEventListener("click", () => navLinks.classList.toggle("open"));
+  links.forEach(a => a.addEventListener("click", () => navLinks.classList.remove("open")));
+</script>
 </body>
 </html>
