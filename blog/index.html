@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>蔡羿承の小站 · 记录学习与折腾的日常</title>
+<meta name="description" content="蔡羿承的个人博客：嵌入式 / 机器人 / SLAM 学习笔记与项目复盘。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%238b9cf9'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3E蔡%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="home" class="page-in">
+
+<div class="bg-deco">
+  <div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div>
+  <div class="bg-grid"></div>
+</div>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a class="logo" href="index.html"><span class="logo-chip">蔡</span>蔡羿承の小站</a>
+    <div class="nav-right">
+      <div class="nav-links" id="navLinks">
+        <a href="index.html" data-nav="home">首页</a>
+        <a href="posts.html" data-nav="posts">文章</a>
+        <a href="archives.html" data-nav="archives">归档</a>
+        <a href="moments.html" data-nav="moments">说说</a>
+        <a href="about.html" data-nav="about">关于</a>
+        <a href="/">🏠 主站</a>
+      </div>
+      <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="切换主题">🌙</button>
+      <button id="menuBtn" aria-label="菜单">☰</button>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-card">
+      <div class="avatar-mono"><span class="zi">蔡</span><span class="sub">CYC</span></div>
+      <div class="hero-info">
+        <h1>你好，这里是蔡羿承 <span class="wave">👋</span></h1>
+        <p class="hero-bio">大连海事大学自动化在读 · 专注嵌入式与机器人开发。这里记录我的项目踩坑、学习笔记和一些折腾的日常。</p>
+        <p class="hero-bio" style="font-family:var(--font-mono);font-size:13.5px;color:var(--dim)">" 把算法装进真实的机器里，让它们跑起来。"</p>
+        <div class="hero-social">
+          <a class="btn btn-primary" href="https://github.com/zmjjcjb" target="_blank" rel="noopener">GitHub</a>
+          <a class="btn btn-ghost" href="mailto:2429708574@qq.com">✉️ 邮箱</a>
+          <a class="btn btn-ghost" href="/">🏠 简历主站</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 最新文章 -->
+  <section class="block">
+    <div class="sec-head">
+      <h2><span class="bar"></span>最新文章</h2>
+      <a class="more" href="posts.html">查看全部 →</a>
+    </div>
+    <div class="post-grid" id="homePosts"></div>
+  </section>
+
+  <!-- 说说预览 -->
+  <section class="block">
+    <div class="sec-head">
+      <h2><span class="bar"></span>最近动态</h2>
+      <a class="more" href="moments.html">更多说说 →</a>
+    </div>
+    <div class="moment-list" id="homeMoments"></div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-inner">
+    <span>© <span id="footYear"></span> 蔡羿承の小站 · Powered by GitHub Pages</span>
+    <span style="font-family:var(--font-mono)">while(alive) { learn(); build(); } <span class="foot-heart">♥</span></span>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  // 首页取最新 3 篇（置顶优先）与最近 3 条说说
+  renderPostCards("homePosts", [...POSTS].sort((a, b) => (b.pin - a.pin) || b.date.localeCompare(a.date)).slice(0, 3));
+  renderMoments("homeMoments", MOMENTS.slice(0, 3));
+  observeReveal();
+</script>
+</body>
+</html>
