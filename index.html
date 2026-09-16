@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CYC 的主页</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #164e63 100%);
+    color: #e2e8f0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .card {
+    max-width: 720px;
+    width: 100%;
+    background: rgba(30, 41, 59, 0.75);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 20px;
+    padding: 48px 40px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+  .avatar {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #38bdf8, #818cf8);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: 700; color: #fff;
+    margin-bottom: 20px;
+  }
+  h1 { font-size: 30px; margin-bottom: 8px; color: #f8fafc; }
+  .subtitle { color: #94a3b8; font-size: 15px; margin-bottom: 28px; }
+  .intro { line-height: 1.9; font-size: 15px; color: #cbd5e1; margin-bottom: 32px; }
+  h2 {
+    font-size: 14px; letter-spacing: 2px; text-transform: uppercase;
+    color: #38bdf8; margin-bottom: 14px;
+  }
+  .tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 32px; }
+  .tag {
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    color: #7dd3fc;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+  }
+  .links { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn {
+    display: inline-block;
+    padding: 10px 22px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all .2s ease;
+  }
+  .btn-primary { background: #0ea5e9; color: #fff; }
+  .btn-primary:hover { background: #0284c7; transform: translateY(-2px); }
+  .btn-ghost { border: 1px solid rgba(148,163,184,.4); color: #cbd5e1; }
+  .btn-ghost:hover { border-color: #38bdf8; color: #7dd3fc; transform: translateY(-2px); }
+  footer { margin-top: 40px; color: #64748b; font-size: 12px; text-align: center; }
+</style>
+</head>
+<body>
+  <main class="card">
+    <div class="avatar">CYC</div>
+    <h1>你好，我是 CYC</h1>
+    <p class="subtitle">学生 · 机器人 / 嵌入式 / AI 爱好者</p>
+    <p class="intro">
+      欢迎来到我的个人主页。这里会记录我的项目、学习笔记和一些折腾的东西。
+      目前在玩无人机视觉、激光雷达与飞控，也写写 STM32 和部署各种 AI 工具。
+    </p>
+
+    <h2>方向</h2>
+    <div class="tags">
+      <span class="tag">无人机 / PX4</span>
+      <span class="tag">激光雷达</span>
+      <span class="tag">计算机视觉</span>
+      <span class="tag">STM32</span>
+      <span class="tag">AI 应用</span>
+      <span class="tag">FPGA</span>
+    </div>
+
+    <h2>链接</h2>
+    <div class="links">
+      <a class="btn btn-primary" href="https://github.com/zmjjcjb" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn btn-ghost" href="#" >博客（待建）</a>
+      <a class="btn btn-ghost" href="mailto:you@example.com">联系我</a>
+    </div>
+
+    <footer>© 2026 CYC · Powered by GitHub Pages</footer>
+  </main>
+</body>
+</html>
