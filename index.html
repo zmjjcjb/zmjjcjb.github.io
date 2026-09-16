@@ -106,11 +106,23 @@
   #hero { padding-top: 130px; padding-bottom: 40px; }
   .hero-grid { display: flex; align-items: center; gap: 48px; }
   .avatar-box { position: relative; flex: none; }
-  .avatar-box img {
-    width: 168px; height: 168px; border-radius: 28px; object-fit: cover; display: block;
+  .avatar-mono {
+    width: 168px; height: 168px; border-radius: 28px;
+    background: linear-gradient(135deg, #0ea5e9 0%, #4f46e5 60%, #7c3aed 100%);
     border: 2px solid rgba(56,189,248,.5);
     box-shadow: 0 0 0 6px rgba(56,189,248,.08), 0 18px 50px rgba(2,8,20,.6);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    position: relative; overflow: hidden;
   }
+  .avatar-mono::before {
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .avatar-mono .zi { font-size: 76px; font-weight: 900; color: #fff; line-height: 1.15; text-shadow: 0 6px 24px rgba(0,0,0,.35); }
+  .avatar-mono .sub { position: relative; font-family: var(--mono); font-size: 12px; color: rgba(255,255,255,.78); letter-spacing: 4px; }
   .avatar-dot {
     position: absolute; right: -6px; bottom: -6px;
     background: rgba(10,25,20,.9); border: 1px solid rgba(52,211,153,.5);
@@ -277,7 +289,7 @@
   <div class="wrap">
     <div class="hero-grid">
       <div class="avatar-box reveal">
-        <img src="avatar.jpg" alt="蔡羿承证件照">
+        <div class="avatar-mono"><span class="zi">蔡</span><span class="sub">CYC</span></div>
         <span class="avatar-dot"><i></i>求职中 · 实习</span>
       </div>
       <div class="reveal">
