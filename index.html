@@ -279,6 +279,7 @@
       <a href="#honors">荣誉</a>
       <a href="#exp">经历</a>
       <a href="#contact">联系</a>
+      <a href="/blog/">博客 ✦</a>
     </div>
     <button id="menuBtn" aria-label="菜单">☰</button>
   </div>
@@ -307,6 +308,7 @@
         </div>
         <div class="hero-cta">
           <a class="btn btn-primary" href="#projects">查看项目 →</a>
+          <a class="btn btn-primary" style="background:linear-gradient(135deg,#8b9cf9,#c084fc);box-shadow:0 8px 24px rgba(139,156,249,.28)" href="/blog/">✦ 我的博客</a>
           <a class="btn btn-ghost" href="https://github.com/zmjjcjb" target="_blank" rel="noopener">GitHub</a>
           <a class="btn btn-ghost" href="mailto:2429708574@qq.com">联系我</a>
         </div>
@@ -644,9 +646,12 @@
   }, { threshold: .12 });
   document.querySelectorAll(".reveal").forEach(el => io.observe(el));
 
-  // 导航高亮 + 移动端菜单
+  // 导航高亮 + 移动端菜单（非锚点链接如 /blog/ 跳过高亮）
   const links = document.querySelectorAll(".nav-links a");
-  const secs = [...links].map(a => document.querySelector(a.getAttribute("href")));
+  const secs = [...links].map(a => {
+    const h = a.getAttribute("href");
+    return h && h.startsWith("#") ? document.querySelector(h) : null;
+  });
   window.addEventListener("scroll", () => {
     const y = window.scrollY + 90;
     let idx = 0;

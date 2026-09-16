@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>关于 · 蔡羿承の小站</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%238b9cf9'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3E蔡%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="about" class="page-in">
+
+<div class="bg-deco">
+  <div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div>
+  <div class="bg-grid"></div>
+</div>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a class="logo" href="index.html"><span class="logo-chip">蔡</span>蔡羿承の小站</a>
+    <div class="nav-right">
+      <div class="nav-links" id="navLinks">
+        <a href="index.html" data-nav="home">首页</a>
+        <a href="posts.html" data-nav="posts">文章</a>
+        <a href="archives.html" data-nav="archives">归档</a>
+        <a href="moments.html" data-nav="moments">说说</a>
+        <a href="about.html" data-nav="about">关于</a>
+        <a href="/">🏠 主站</a>
+      </div>
+      <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="切换主题">🌙</button>
+      <button id="menuBtn" aria-label="菜单">☰</button>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+  <section class="block">
+    <div class="sec-head">
+      <h2><span class="bar"></span>关于我</h2>
+    </div>
+    <div class="about-grid">
+      <!-- 左列 -->
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <div class="glass reveal" style="padding:26px">
+          <div class="about-sec-title">🙋 自我介绍</div>
+          <p style="font-size:14.5px;color:var(--muted)">
+            我是<b style="color:var(--text)">蔡羿承</b>，2006 年出生，大连海事大学自动化专业本科生（211 · 专业前 10%）。
+            白天上课、泡实验室，晚上调车和机器人——主攻<b style="color:var(--text)">嵌入式开发与机器人运动控制</b>，
+            对四足 / 多足机器人方向有浓厚兴趣。
+          </p>
+          <p style="font-size:14.5px;color:var(--muted);margin-top:10px">
+            从画 PCB、焊板子，到写 Linux 驱动、调 SLAM 算法，全流程都能自己搞定。
+            这个小站记录我做项目的踩坑复盘、学习笔记，还有一些折腾的日常。
+          </p>
+        </div>
+
+        <div class="glass reveal" style="padding:26px">
+          <div class="about-sec-title">🛠️ 技术栈</div>
+          <div class="skill-line">
+            <span class="tag">C（精通）</span><span class="tag">C++</span><span class="tag">Python</span>
+            <span class="tag">STM32</span><span class="tag">Raspberry Pi</span><span class="tag">Linux 驱动</span>
+            <span class="tag">FreeRTOS</span><span class="tag">UART/I2C/SPI</span>
+            <span class="tag">ROS</span><span class="tag">Gazebo</span><span class="tag">SLAM</span>
+            <span class="tag">PCL</span><span class="tag">OpenCV</span><span class="tag">PyTorch</span>
+            <span class="tag">PID</span><span class="tag">A* 规划</span><span class="tag">Altium Designer</span>
+            <span class="tag">MATLAB/Simulink</span>
+          </div>
+        </div>
+
+        <div class="glass reveal" style="padding:26px">
+          <div class="about-sec-title">📅 时间线</div>
+          <div class="exp-row"><span class="t">2024.09</span><span>考入大连海事大学自动化专业，任班级班长</span></div>
+          <div class="exp-row"><span class="t">2024.10</span><span>第一辆智能小车跑起来，从此掉进嵌入式深坑</span></div>
+          <div class="exp-row"><span class="t">2025.04</span><span>开始折腾 ROS 与无人系统，入坑 SLAM</span></div>
+          <div class="exp-row"><span class="t">2025.06</span><span>担任学院科技学社部长，组织每周技术分享会</span></div>
+          <div class="exp-row"><span class="t">2025.11</span><span>启动六足机器人项目，软硬件一把梭</span></div>
+          <div class="exp-row"><span class="t">2026.01</span><span>无人船感知论文在投，iCAN AI 挑战赛全国一等奖</span></div>
+        </div>
+
+        <div class="glass reveal" style="padding:26px">
+          <div class="about-sec-title">🏆 奖项精选</div>
+          <div class="exp-row"><span class="t">2026</span><span>"智能化船舶尾流场分析专家系统"全国决赛一等奖</span></div>
+          <div class="exp-row"><span class="t">2025</span><span>iCAN 大学生创新创业大赛 AI 挑战赛 全国总决赛一等奖</span></div>
+          <div class="exp-row"><span class="t">2025</span><span>全国大学生电子设计竞赛 辽宁赛区二等奖</span></div>
+          <div class="exp-row"><span class="t">2024</span><span>校级智能车设计大赛一等奖 · 华航杯单片机大赛一等奖</span></div>
+        </div>
+      </div>
+
+      <!-- 右列 -->
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <div class="glass reveal" style="padding:26px;text-align:center">
+          <div class="avatar-mono" style="margin:0 auto"><span class="zi">蔡</span><span class="sub">CYC</span></div>
+          <div style="margin-top:14px;font-weight:800;font-size:17px">蔡羿承</div>
+          <div style="font-size:13px;color:var(--dim);font-family:var(--font-mono)">Embedded · Robotics · 2006</div>
+        </div>
+
+        <div class="glass reveal" style="padding:26px">
+          <div class="about-sec-title">🎓 教育</div>
+          <p style="font-size:14px"><b>大连海事大学</b>（211）</p>
+          <p style="font-size:13.5px;color:var(--muted)">自动化 · 本科 · 2024.09 – 2028.06</p>
+          <p style="font-size:13.5px;color:#34d399;font-weight:700">专业排名 前 10%</p>
+        </div>
+
+        <div class="glass reveal" style="padding:26px">
+          <div class="about-sec-title">📮 联系我</div>
+          <div class="exp-row"><span class="t">Email</span><span><a style="color:var(--link);text-decoration:none" href="mailto:2429708574@qq.com">2429708574@qq.com</a></span></div>
+          <div class="exp-row"><span class="t">GitHub</span><span><a style="color:var(--link);text-decoration:none" href="https://github.com/zmjjcjb" target="_blank" rel="noopener">github.com/zmjjcjb</a></span></div>
+          <div class="exp-row"><span class="t">坐标</span><span>南京 · 可远程 / 全国</span></div>
+          <p style="font-size:13px;color:var(--dim);margin-top:10px">正在寻找嵌入式 / 机器人方向的实习机会，欢迎交流！</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot-inner">
+    <span>© <span id="footYear"></span> 蔡羿承の小站 · Powered by GitHub Pages</span>
+    <span style="font-family:var(--font-mono)">while(alive) { learn(); build(); } <span class="foot-heart">♥</span></span>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
