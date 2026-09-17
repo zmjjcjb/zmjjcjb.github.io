@@ -1,0 +1,100 @@
+(() => {
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+
+/* 导航：移动端开合 + 当前区域高亮 */
+const nav = $('#navigation'), toggle = $('.menu-toggle');
+toggle.addEventListener('click', () => {
+  const open = nav.classList.toggle('open');
+  toggle.setAttribute('aria-expanded', open);
+  toggle.setAttribute('aria-label', open ? '关闭导航菜单' : '打开导航菜单');
+});
+nav.addEventListener('click', e => { if (e.target.tagName === 'A') { nav.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); } });
+const links = $$('nav a');
+const spy = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id)); }), { rootMargin: '-40% 0px -55%' });
+$$('main section[id]').forEach(s => spy.observe(s));
+
+/* 学习方向切换：文案 + 电路板动画状态 */
+const tracks = {
+  embedded: {
+    label: 'EMBEDDED SYSTEMS', title: '从点亮一盏灯，<br>到掌控一个系统。',
+    description: '从 51 单片机入门，在 STM32 上进阶。让 C 语言走出屏幕，连接传感器、驱动电机，把每一行代码变成看得见的响应。',
+    tags: ['51 单片机', 'STM32', 'C 语言', '传感器与通信'],
+    route: ['认识电路', '编写程序', '软硬件联调'], chip: 'STM32', detail: 'ARM CORTEX-M', led: 'LED / OFF'
+  },
+  power: {
+    label: 'POWER ELECTRONICS', title: '把电能，<br>驯得服服帖帖。',
+    description: '从电源题出发：整流、逆变、拓扑设计。电流的每一次流转背后，都有你亲手算出的参数和焊出的电路。',
+    tags: ['电源设计', '电力电子', 'PCB 绘制', '电路调试'],
+    route: ['原理分析', '电路搭建', '波形验证'], chip: 'BUCK', detail: 'DC-DC CONVERTER', led: 'VOUT / OK'
+  },
+  robot: {
+    label: 'SMART CAR & ROBOTICS', title: '给小车一双眼睛，<br>让它自己认路。',
+    description: '摄像头识别赛道，PID 控制转向。当算法第一次驱使机械动起来，那种「活了」的感觉，会上瘾。',
+    tags: ['循迹与控制', '摄像头识别', '电机驱动', 'PID 调参'],
+    route: ['搭建车模', '感知环境', '冲刺赛道'], chip: 'MCU', detail: 'SMART CAR CTRL', led: 'MOTOR / RUN'
+  }
+};
+const tabs = $$('.learning-tabs button');
+function setTrack(key) {
+  const t = tracks[key];
+  $('#track-label').textContent = t.label;
+  $('#track-title').innerHTML = t.title;
+  $('#track-description').textContent = t.description;
+  $('#track-tags').innerHTML = t.tags.map(s => `<span>${s}</span>`).join('');
+  $('#track-route').innerHTML = t.route.map((s, i) => `<span>${s}</span>${i < 2 ? '<b>→</b>' : ''}`).join('');
+  $('#chip-text').textContent = t.chip;
+  $('#chip-detail').textContent = t.detail;
+  const led = $('#led-label'), ledEl = $('#board-led');
+  ledEl.classList.remove('on');
+  $('#led-toggle').setAttribute('aria-pressed', 'false');
+  if (ledEl.classList.contains('on')) ledEl.classList.remove('on');
+}
+tabs.forEach(b => b.addEventListener('click', () => {
+  tabs.forEach(x => { x.setAttribute('aria-selected', x === b); x.tabIndex = x === b ? 0 : -1; });
+  $('#learning-panel').setAttribute('aria-labelledby', b.id);
+  setTrack(b.dataset.track);
+}));
+/* 面包板小互动：点亮第一盏灯 */
+$('#led-toggle').addEventListener('click', () => {
+  const on = $('#board-led').classList.toggle('on');
+  $('#led-toggle').setAttribute('aria-pressed', on);
+  $('#led-label').textContent = on ? 'LED / ON ✳' : 'LED / OFF';
+});
+/* 开源学习资料链接（ST 官方文档库） */
+$('.inline-link[href="#learn-docs"]')?.addEventListener('click', e => {
+  e.preventDefault();
+  window.open('https://www.st.com/content/st_com/en/support/learning.html', '_blank', 'noopener');
+});
+
+/* 荣誉手风琴：同时只展开一个 */
+const honorDetails = $$('.honor-list details');
+honorDetails.forEach(d => d.addEventListener('toggle', () => { if (d.open) honorDetails.forEach(o => { if (o !== d) o.open = false; }); }));
+
+/* 图片放大查看 */
+const dialog = $('#image-dialog'), dialogImg = $('#dialog-image'), dialogCap = $('#dialog-caption');
+$$('.gallery-card').forEach(c => c.addEventListener('click', () => {
+  dialogImg.src = c.dataset.photo;
+  dialogImg.alt = c.querySelector('img').alt;
+  dialogCap.textContent = c.dataset.caption;
+  dialog.showModal();
+}));
+$('.dialog-close').addEventListener('click', () => dialog.close());
+dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
+
+/* 复制群号 */
+const toast = $('#toast');
+let toastTimer;
+function showToast(msg) { toast.textContent = msg; toast.classList.add('visible'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('visible'), 2200); }
+$('#copy-qq').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText('242947621'); showToast('群号 242947621 已复制 ✓'); }
+  catch { showToast('复制失败，请手动输入群号：242947621'); }
+});
+/* 海报查看 */
+$('#poster-open').addEventListener('click', () => {
+  dialogImg.src = 'assets/poster.png';
+  dialogImg.alt = '2026 同舟学社招新海报';
+  dialogCap.textContent = '2026 同舟学社招新海报 · 扫码加入招新群 242947621';
+  dialog.showModal();
+});
+})();
