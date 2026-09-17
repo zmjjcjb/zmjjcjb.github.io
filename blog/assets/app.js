@@ -77,7 +77,7 @@ function momentHTML(m) {
   const tags = m.tags.map(t => `<span class="tag">${t}</span>`).join("");
   return `
     <div class="glass hoverable moment reveal">
-      <div class="moment-ava">蔡</div>
+      <div class="moment-ava"><img src="assets/avatar.jpg" alt=""></div>
       <div class="moment-body">
         <div class="moment-head"><b>${SITE.author}</b><span class="moment-time">${m.date}</span></div>
         <div class="moment-text"><span class="mood">${m.mood}</span>${m.text}</div>
