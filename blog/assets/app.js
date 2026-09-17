@@ -194,6 +194,34 @@ function renderFooter() {
   if (y) y.textContent = new Date().getFullYear();
 }
 
+/* ---------- 点击特效：粒子迸发 ---------- */
+const FX_COLORS = ["#8b9cf9", "#c084fc", "#f472b6", "#4f9df7", "#34d399", "#fbbf24"];
+document.addEventListener("click", e => {
+  // 尊重减少动画偏好
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const fx = document.createElement("div");
+  fx.className = "click-fx";
+  fx.style.left = e.clientX + "px";
+  fx.style.top = e.clientY + "px";
+  // 中心光环
+  const ring = document.createElement("i");
+  ring.className = "ring";
+  ring.style.borderColor = FX_COLORS[Math.floor(Math.random() * FX_COLORS.length)];
+  fx.appendChild(ring);
+  // 8 颗四散粒子
+  for (let i = 0; i < 8; i++) {
+    const p = document.createElement("i");
+    const ang = (Math.PI * 2 * i) / 8 + Math.random() * .5;
+    const dist = 26 + Math.random() * 26;
+    p.style.setProperty("--tx", Math.cos(ang) * dist + "px");
+    p.style.setProperty("--ty", Math.sin(ang) * dist + "px");
+    p.style.background = FX_COLORS[Math.floor(Math.random() * FX_COLORS.length)];
+    fx.appendChild(p);
+  }
+  document.body.appendChild(fx);
+  setTimeout(() => fx.remove(), 750);
+});
+
 /* ---------- 页面初始化 ---------- */
 document.addEventListener("DOMContentLoaded", () => {
   syncThemeIcon();
