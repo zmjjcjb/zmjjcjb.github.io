@@ -45,6 +45,8 @@ function setTrack(key) {
   $('#track-route').innerHTML = t.route.map((s, i) => `<span>${s}</span>${i < 2 ? '<b>→</b>' : ''}`).join('');
   $('#chip-text').textContent = t.chip;
   $('#chip-detail').textContent = t.detail;
+  const panel = $('#learning-panel');
+  panel.classList.remove('swap'); void panel.offsetWidth; panel.classList.add('swap');
   const led = $('#led-label'), ledEl = $('#board-led');
   ledEl.classList.remove('on');
   $('#led-toggle').setAttribute('aria-pressed', 'false');
@@ -70,6 +72,21 @@ $('.inline-link[href="#learn-docs"]')?.addEventListener('click', e => {
 /* 荣誉手风琴：同时只展开一个 */
 const honorDetails = $$('.honor-list details');
 honorDetails.forEach(d => d.addEventListener('toggle', () => { if (d.open) honorDetails.forEach(o => { if (o !== d) o.open = false; }); }));
+
+/* 滚动入场动画：仅在浏览器支持且未开启"减弱动态效果"时启用，避免内容被永久隐藏 */
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+  document.documentElement.classList.add('js');
+  const byParent = new Map();
+  const targets = $$('.section-kicker,.section-heading,.about-heading>*,.values article,.learning-tabs,.learning-panel,.learning-foot,.competition-feature,.honor-list,.people-heading,.alumni-grid article,.gallery-card,.join-grid>*,.faq');
+  const io = new IntersectionObserver(entries => entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }), { threshold: .12, rootMargin: '0px 0px -6%' });
+  targets.forEach(el => {
+    const group = byParent.get(el.parentElement) ?? byParent.set(el.parentElement, []).get(el.parentElement);
+    el.style.setProperty('--rd', `${Math.min(group.length * 90, 360)}ms`);
+    group.push(el);
+    el.classList.add('reveal');
+    io.observe(el);
+  });
+}
 
 /* 图片放大查看 */
 const dialog = $('#image-dialog'), dialogImg = $('#dialog-image'), dialogCap = $('#dialog-caption');
