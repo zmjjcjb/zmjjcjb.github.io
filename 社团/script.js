@@ -98,8 +98,10 @@ if (!reduceMotion && 'IntersectionObserver' in window) {
   document.documentElement.classList.add('js');
   const byParent = new Map();
   const targets = $$('.section-kicker,.section-heading,.about-heading>*,.values article,.learning-tabs,.learning-panel,.learning-foot,.competition-feature,.honor-list,.people-heading,.alumni-grid article,.gallery-card,.join-grid>*,.faq');
-  const io = new IntersectionObserver(entries => entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }), { threshold: .12, rootMargin: '0px 0px -6%' });
+  const io = new IntersectionObserver(entries => entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }), { threshold: .08, rootMargin: '0px 0px -4%' });
   targets.forEach(el => {
+    // 刷新恢复滚动位置等场景下，已处于视口内的元素不做隐藏，避免内容空白
+    if (el.getBoundingClientRect().top < innerHeight * 0.94) return;
     const group = byParent.get(el.parentElement) ?? byParent.set(el.parentElement, []).get(el.parentElement);
     el.style.setProperty('--rd', `${Math.min(group.length * 90, 360)}ms`);
     group.push(el);
